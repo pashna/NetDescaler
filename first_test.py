@@ -30,19 +30,19 @@ def perfTest():
     net.start()
     print("Dumping host connections")
     dumpNodeConnections( net.hosts )
-    print("Testing network connectivity")
-    net.pingAll()
-    print("Testing bandwidth between h1 and h4")
-    h1, h4 = net.get('h1', 'h4')
-    h1.sendCmd('./D-ITG-2.8.1-r1023/bin/ITGRecv')
-    h4.sendCmd('./D-ITG-2.8.1-r1023/bin/ITGSend –T UDP  –a 10.0.0.2 –c 100 –C 10 –t 15000 -l sender.log –x receiver.log ')
+    #print("Testing network connectivity")
+    #net.pingAll()
+    #print("Testing bandwidth between h1 and h4")
+    #h1, h4 = net.get('h1', 'h4')
+    #h1.sendCmd('./D-ITG-2.8.1-r1023/bin/ITGRecv')
+    #h4.sendCmd('./D-ITG-2.8.1-r1023/bin/ITGSend –T UDP  –a 10.0.0.2 –c 100 –C 10 –t 15000 -l sender.log –x receiver.log ')
 
-    results = {}
-    for h in [h1, h4]:
-        results[h.name] = h.waitOutput()
+    #results = {}
+    #for h in [h1, h4]:
+    #    results[h.name] = h.waitOutput()
 
-    print(results)
-    net.iperf((h1, h4))
+    #print(results)
+    #net.iperf((h1, h4))
     net.stop()
 
 

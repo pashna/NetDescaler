@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 from mininet.topo import Topo
 from mininet.net import Mininet

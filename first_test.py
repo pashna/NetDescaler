@@ -31,8 +31,11 @@ def perfTest():
     print("Dumping host connections")
     dumpNodeConnections( net.hosts )
     h1, h2 = net.get('h1', 'h2')
-    print("h1: ", h1.cmd("ifconfig"))
-    print("h2: ", h2.cmd("ifconfig"))
+    #print("h1: ", h1.cmd("ifconfig"))
+    #print("h2: ", h2.cmd("ifconfig"))
+    h2.cmd('./D-ITG-2.8.1-r1023/bin/ITGRecv')
+    h1.cmd('./D-ITG-2.8.1-r1023/bin/ITGSend –T UDP  –a 10.0.0.2 –c 100 –C 10 –t 5000 -l sender.log –x receiver.log ')
+
     #print("Testing network connectivity")
     #net.pingAll()
     #print("Testing bandwidth between h1 and h4")

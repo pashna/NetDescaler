@@ -7,7 +7,7 @@ from mininet.link import TCLink
 from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 from mininet.node import OVSSwitch, Controller, RemoteController
-
+from time import sleep
 
 class SingleSwitchTopo( Topo ):
     "Single switch connected to n hosts."
@@ -18,7 +18,7 @@ class SingleSwitchTopo( Topo ):
             host = self.addHost( 'h%s' % (h + 1),
                              cpu=.5/n )
 
-            self.addLink( host, switch, bw=20)
+            self.addLink( host, switch, bw=1, delay='100ms', loss=50)
 
 def perfTest():
     "Create network and run simple performance test"
@@ -28,14 +28,29 @@ def perfTest():
     net = Mininet(topo=topo, host=CPULimitedHost, link=TCLink, controller=controller)
 
     net.start()
+    #net.pingAll()
     print("Dumping host connections")
     dumpNodeConnections( net.hosts )
     h1, h2 = net.get('h1', 'h2')
     #print("h1: ", h1.cmd("ifconfig"))
     #print("h2: ", h2.cmd("ifconfig"))
-    h2.cmd('./D-ITG-2.8.1-r1023/bin/ITGRecv')
-    h1.cmd('./D-ITG-2.8.1-r1023/bin/ITGSend –T UDP  –a 10.0.0.2 –c 100 –C 10 –t 5000 -l sender.log –x receiver.log ')
+    print("start_test")
+    h2.sendCmd('./D-ITG-2.8.1-r1023/bin/ITGRecv &')
+    #sleep(2)
+    print(h1.cmd('./D-ITG-2.8.1-r1023/bin/ITGSend -T UDP -a 10.0.0.2 -O 10000000 -c 900 -t 5000 -l sender.log -x reciever.log'))
+    sleep(6)
+    print("All started and supposed to finish. RESULT:")
 
+    print(h1.cmd('./D-ITG-2.8.1-r1023/bin/ITGDec sender.log'))
+    sleep(5)
+    h2.cmd("kill ITGRecv")
+    result = {}
+
+    #for h in [h1]:
+    #    h.name = h.waitOutput()
+    #    print("output", result)
+
+    print("closing sessions")
     #print("Testing network connectivity")
     #net.pingAll()
     #print("Testing bandwidth between h1 and h4")

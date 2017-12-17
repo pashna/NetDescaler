@@ -60,3 +60,4 @@ target/
 idea*
 .idea/*
 .ipynb_checkpoints*
+*.txt

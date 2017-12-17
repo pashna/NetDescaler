@@ -8,65 +8,120 @@ from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 from mininet.node import OVSSwitch, Controller, RemoteController
 from time import sleep
+from signal import SIGINT
+from datetime import datetime
+import os
+
+FOLDER_TO_SAVE = "/home/pkochetk/images/data/MSU/capture"
+
 
 class SingleSwitchTopo( Topo ):
     "Single switch connected to n hosts."
-    def build( self, n=2 ):
+
+    def __init__(self, bw, delay, n_hosts, loss=0):
+        self.bw = bw
+        self.delay = str(delay) + 'ms'
+        self.loss = loss
+        self.n_hosts = n_hosts
+        super(SingleSwitchTopo, self).__init__()
+
+
+    def build( self ):
         switch = self.addSwitch( 's1' )
-        for h in range(n):
+        for h in range(self.n_hosts):
             # Each host gets 50%/n of system CPU
             host = self.addHost( 'h%s' % (h + 1),
-                             cpu=.5/n )
+                             cpu=.5/self.n_hosts )
 
-            self.addLink( host, switch, bw=1, delay='100ms', loss=50)
+            self.addLink( host,
+                          switch,
+                          bw=self.bw,
+                          delay=self.delay,
+                          loss=self.loss,
+                          use_htb=True)
 
-def perfTest():
+
+def ftp(bw, delay, scale=1, loss=0, n_hosts=4):
+    bw = bw * scale
+    delay = int(delay / scale)
+
     "Create network and run simple performance test"
-    topo = SingleSwitchTopo(n=4)
-    controller = RemoteController('controller', ip='127.0.0.1', port=6633)
+    topo = SingleSwitchTopo(bw=bw,
+                            delay=delay,
+                            n_hosts=n_hosts,
+                            loss=loss)
 
-    net = Mininet(topo=topo, host=CPULimitedHost, link=TCLink, controller=controller)
+    # controller = RemoteController('controller', ip='127.0.0.1', port=6633)
+
+    net = Mininet(topo=topo, host=CPULimitedHost, link=TCLink)#, controller=controller)
+
+    date = datetime.now().strftime("%m_%d_%H_%M")
 
     net.start()
-    #net.pingAll()
+    file_name = "date__{}mb_{}".format(date, BW, DELAY)
+    SCALE_FOLDER = str(scale).replace('.', '_')
+
+    path_to_file = FOLDER_TO_SAVE + '/' + SCALE_FOLDER + '/' + file_name
+    os.system("tcpdump -w {}.pcap -i s1-eth1 & ".format(path_to_file))
+
+    sleep(2)
+    net.pingAll()
     print("Dumping host connections")
     dumpNodeConnections( net.hosts )
-    h1, h2 = net.get('h1', 'h2')
-    #print("h1: ", h1.cmd("ifconfig"))
-    #print("h2: ", h2.cmd("ifconfig"))
-    print("start_test")
-    h2.sendCmd('./D-ITG-2.8.1-r1023/bin/ITGRecv &')
-    #sleep(2)
-    print(h1.cmd('./D-ITG-2.8.1-r1023/bin/ITGSend -T UDP -a 10.0.0.2 -O 10000000 -c 900 -t 5000 -l sender.log -x reciever.log'))
-    sleep(6)
-    print("All started and supposed to finish. RESULT:")
+    h1, h2, h3, h4 = net.get('h1', 'h2', 'h3', 'h4')
 
-    print(h1.cmd('./D-ITG-2.8.1-r1023/bin/ITGDec sender.log'))
-    sleep(5)
-    h2.cmd("kill ITGRecv")
-    result = {}
+    h1.cmd("rm *.log")
 
-    #for h in [h1]:
-    #    h.name = h.waitOutput()
-    #    print("output", result)
+    print("========")
+
+    print("start_test. RUN WIRESHARK!!!")
+
+    print("Running server 1")
+    print(h1.cmd('python ftp_server.py &'))
+
+
+    sleep(2)
+    print(h2.cmd('python ftp_client.py &'))
+
+    sleep(1 * (1/scale))
+    print(h3.cmd('python ftp_client.py &'))
+
+    sleep(2 * (1 / scale))
+    print("Running h4")
+    print(h4.cmd('python ftp_client.py'))
+
+    print("Waiting for results")
+    #sleep(40)
+
+    h1.shell.send_signal(SIGINT)
+    h2.shell.send_signal(SIGINT)
+    h3.shell.send_signal(SIGINT)
+    h4.shell.send_signal(SIGINT)
 
     print("closing sessions")
-    #print("Testing network connectivity")
-    #net.pingAll()
-    #print("Testing bandwidth between h1 and h4")
-    #h1, h4 = net.get('h1', 'h4')
-    #h1.sendCmd('./D-ITG-2.8.1-r1023/bin/ITGRecv')
-    #h4.sendCmd('./D-ITG-2.8.1-r1023/bin/ITGSend –T UDP  –a 10.0.0.2 –c 100 –C 10 –t 15000 -l sender.log –x receiver.log ')
+    print("tshark -r {}.pcap -T fields -e frame.number -e frame.timestamp "
+              " -e ip.src -e ip.dst -e frame.len -e tcp.seq > {}.csv".format(path_to_file,
+                                                                             path_to_file))
 
-    #results = {}
-    #for h in [h1, h4]:
-    #    results[h.name] = h.waitOutput()
+    os.system("tshark -r {}.pcap -T fields -e frame.number -e frame.time "
+              " -e ip.src -e ip.dst -e frame.len -e tcp.seq > {}.csv".format(path_to_file,
+                                                                             path_to_file))
 
-    #print(results)
-    #net.iperf((h1, h4))
+
+    os.system("chmod 777 {}.*".format(path_to_file))
+
+    print("All started and supposed to finish. RESULT:")
+    #print(h1.cmd('../software/D-ITG/bin/ITGDec sender.log'))
+    #print(h2.cmd('../software/D-ITG/bin/ITGDec receiver.log'))
+
     net.stop()
+
 
 
 if __name__ == '__main__':
     setLogLevel('info')
-    perfTest()
+    BW = 50
+    DELAY = 50
+    scale = 1
+    for scale in [1]:
+        ftp(BW, DELAY, scale=scale)

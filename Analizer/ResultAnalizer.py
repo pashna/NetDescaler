@@ -58,7 +58,7 @@ class ResultAnalyzer:
         if len(self.__ip_srcs):
             df = df[df.ip_src.isin(self.__ip_srcs)]
         if len(self.__ip_dsts):
-            df = df[df.ip_src.isin(self.__ip_dsts)]
+            df = df[df.ip_dst.isin(self.__ip_dsts)]
 
         return df
 
@@ -66,16 +66,21 @@ class ResultAnalyzer:
         df = None
         for path in self.__pathes:
             df_exp = self.__read_df(path)
-            self.filter_ip(df)
+            df_exp = self.filter_ip(df_exp)
             df_exp = self.__aggregate(df_exp)
             if df is None:
                 df = df_exp
             else:
                 df['size'] += df_exp['size']
 
+        print(df.head())
         df['size'] /= len(self.__pathes)
         df['size'].plot()
         input('press return to continue')
 
-ra = ResultAnalyzer(['/home/pkochetk/images/data/MSU/capture/exp_1/0_1/date__12_16_18_13mb_50.csv'], '500ms')
+
+ra = ResultAnalyzer(['/home/pkochetk/images/data/MSU/capture/exp_1/0_1/date__12_16_18_13mb_50.csv'],
+                    '500ms',
+                    ip_srcs=['10.0.0.1', '10.0.0.2'],
+                    ip_dsts=['10.0.0.3'])
 ra.plot()

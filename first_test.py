@@ -12,7 +12,7 @@ from signal import SIGINT
 from datetime import datetime
 import os
 
-FOLDER_TO_SAVE = "/home/pkochetk/images/data/MSU/capture"
+FOLDER_TO_SAVE = "/home/pkochetk/images/data/MSU/capture/exp_2"
 
 
 class SingleSwitchTopo( Topo ):
@@ -27,7 +27,9 @@ class SingleSwitchTopo( Topo ):
 
 
     def build( self ):
+        """
         switch = self.addSwitch( 's1' )
+
         for h in range(self.n_hosts):
             # Each host gets 50%/n of system CPU
             host = self.addHost( 'h%s' % (h + 1),
@@ -39,6 +41,21 @@ class SingleSwitchTopo( Topo ):
                           delay=self.delay,
                           loss=self.loss,
                           use_htb=True)
+
+        """
+        s1 = self.addSwitch('s1')
+        s2 = self.addSwitch('s2')
+        self.addLink(s1, s2, bw=self.bw, delay=self.delay, loss=self.loss, use_htb=True)
+        h1 = self.addHost('h1')
+        h2 = self.addHost('h2')
+        h3 = self.addHost('h3')
+        h4 = self.addHost('h4')
+
+        self.addLink(h1, s1, bw=self.bw, delay=self.delay, loss=self.loss, use_htb=True)
+        self.addLink(h2, s1, bw=self.bw, delay=self.delay, loss=self.loss, use_htb=True)
+        self.addLink(h3, s2, bw=self.bw, delay=self.delay, loss=self.loss, use_htb=True)
+        self.addLink(h4, s2, bw=self.bw, delay=self.delay, loss=self.loss, use_htb=True)
+
 
 
 def ftp(bw, delay, scale=1, loss=0, n_hosts=4):
@@ -123,5 +140,5 @@ if __name__ == '__main__':
     BW = 50
     DELAY = 50
     scale = 1
-    for scale in [1]:
+    for scale in [1.]:
         ftp(BW, DELAY, scale=scale)

@@ -29,7 +29,8 @@ class FTPClient:
         print("uploaded")
 
     def download(self, filename):
-        localfile = os.getcwd() + os.sep + 'tmp_files' + os.sep + '/{}_{}'.format(filename, get_ip())
+        localfile = 'tmp_files/{}_{}'.format(filename, get_ip())
+        print('LOCALF = ', localfile)
         with open(localfile, 'wb') as localfile:
             self.__ftp.retrbinary('RETR ' + filename, localfile.write, 1024)
             self.__ftp.quit()
@@ -48,7 +49,16 @@ def main(filename, server, cmd):
 
 
 if __name__ == '__main__':
-    filename = sys.argv[1]
+    filesize = sys.argv[1]
+
+    # create a file
+    # TODO: ADD CHECHING IF IT EXISTS
+
+    filename = "ftp_file_{}".format(filesize)
+    filepath = os.getcwd() + os.sep + 'tmp_files' + os.sep + filename
+    os.system("dd if=/dev/zero of={}  bs={}  count=1".format(filepath, filesize))
+
+    print(filename)
     server = sys.argv[2]
     cmd = sys.argv[3]
     sleep_time = 0
@@ -57,3 +67,5 @@ if __name__ == '__main__':
 
     sleep(sleep_time)
     main(filename, server, cmd)
+    os.system("rm {}".format(filepath))
+

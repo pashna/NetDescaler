@@ -18,11 +18,11 @@ from time import sleep
 from datetime import datetime, timedelta
 from NetworkApps.FlowScheduler import FlowScheduler
 
-class SingleSwitchTopo( Topo ):
+class Topology(Topo):
     "Single switch connected to n hosts."
 
     def __init__(self):
-        super(SingleSwitchTopo, self).__init__()
+        super(Topology, self).__init__()
 
     def build( self ):
         for s in CONFIG['switches']:
@@ -37,9 +37,9 @@ class SingleSwitchTopo( Topo ):
 def pingAll():
 
     "Create network and run simple performance test"
-    topo = SingleSwitchTopo()
+    topo = Topology()
 
-    net = Mininet(topo=topo, host=CPULimitedHost, link=TCLink)  # , controller=controller)
+    net = Mininet(topo=topo, host=CPULimitedHost, link=TCLink)
     net.start()
     eths_to_capture = ['{}-eth0'.format(h) for h in CONFIG["interfaces_to_capture"]]
 
@@ -48,7 +48,6 @@ def pingAll():
 
     net.pingAll()
 
-
     flow_scheduler = FlowScheduler()
     results = flow_scheduler.run_commands(net, CONFIG["commands"])
 
@@ -56,12 +55,13 @@ def pingAll():
         print(h, "".join(r))
         print("----")
 
-    sleep(20)
     tc.decode_capture(remove_old=False)
 
-    ra = ResultAnalyzer(pathes=[tc.get_filename() + '.csv'], freq='50ms')
+    ra = ResultAnalyzer(pathes=[tc.get_filename() + '.csv'],
+                        ip_dsts=['10.0.0.2'],
+                        freq='50ms')
     ra.plot()
-    os.system("rm tmp_files/filik_*")
+    os.system("rm tmp_files/*")
     net.stop()
 
 

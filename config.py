@@ -39,9 +39,9 @@ CONFIG = \
           "commands": {
               "h1": [{"cmd": "python NetworkApps/ftp/ftp_server.py",
                       "sleep_time": 0}],
-              "h2": [{"cmd": "python NetworkApps/ftp/ftp_client.py filik h1 download",
-                      "sleep_time": 10}],
-              "h3": [{"cmd": "python NetworkApps/ftp/ftp_client.py filik h1 download",
-                      "sleep_time": 15}]
+              "h2": [{"cmd": "python NetworkApps/ftp/ftp_client.py 25M h1 download",
+                      "sleep_time": 3}],
+              "h3": [{"cmd": "python NetworkApps/ftp/ftp_client.py 40M h1 download",
+                      "sleep_time": 5}]
           }
 }

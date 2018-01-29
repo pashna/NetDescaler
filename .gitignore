@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 tmp_files/*
+csv/*
 
 # C extensions
 *.so

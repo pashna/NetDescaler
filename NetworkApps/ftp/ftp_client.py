@@ -1,6 +1,6 @@
-from ftplib import FTP
-import sys
 import os
+import sys
+from ftplib import FTP
 from time import sleep
 import subprocess
 
@@ -8,11 +8,10 @@ import subprocess
 def get_ip():
     proc = subprocess.Popen(["ifconfig | grep -Po '(?<=inet addr:)[0-9\.]+'"], stdout=subprocess.PIPE, shell=True)
     out, _ = proc.communicate()
-    ip_address = str(out).split('\\n')[0]
+    ip_address = str(out).split('\\n')[0][2:]
     return ip_address
 
 class FTPClient:
-
 
     def __init__(self):
         self.__ftp = FTP('')
@@ -67,5 +66,3 @@ if __name__ == '__main__':
 
     sleep(sleep_time)
     main(filename, server, cmd)
-    os.system("rm {}".format(filepath))
-

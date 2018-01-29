@@ -1,13 +1,15 @@
+import os
+
 from pyftpdlib.authorizers import DummyAuthorizer
 from pyftpdlib.handlers import FTPHandler
 from pyftpdlib.servers import FTPServer as FTP
-import os
 import subprocess
+
 
 def get_ip():
     proc = subprocess.Popen(["ifconfig | grep -Po '(?<=inet addr:)[0-9\.]+'"], stdout=subprocess.PIPE, shell=True)
     out, _ = proc.communicate()
-    ip_address = str(out).split('\\n')[0]
+    ip_address = str(out).split('\n')[0]
     return ip_address
 
 

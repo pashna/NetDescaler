@@ -45,6 +45,7 @@ class SingleSwitchTopo( Topo ):
         """
         s1 = self.addSwitch('s1')
         s2 = self.addSwitch('s2')
+
         self.addLink(s1, s2, bw=self.bw, delay=self.delay, loss=self.loss, use_htb=True)
         h1 = self.addHost('h1')
         h2 = self.addHost('h2')

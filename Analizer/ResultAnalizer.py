@@ -26,7 +26,6 @@ class ResultAnalyzer:
     def __read_df(self, path):
 
         df = pd.read_csv(path, sep='\t', header=None, engine='python')
-
         df.rename(columns={
             1: 'date',
             2: 'ip_src',
@@ -40,7 +39,7 @@ class ResultAnalyzer:
         df.index = df['date']
 
         del df[0]
-        del df[5]
+        #del df[5]
 
         return df
 
@@ -73,14 +72,14 @@ class ResultAnalyzer:
             else:
                 df['size'] += df_exp['size']
 
-        print(df.head())
         df['size'] /= len(self.__pathes)
         df['size'].plot()
         input('press return to continue')
 
-
+"""
 ra = ResultAnalyzer(['/home/pkochetk/images/data/MSU/capture/exp_1/0_1/date__12_16_18_13mb_50.csv'],
                     '500ms',
                     ip_srcs=['10.0.0.1', '10.0.0.2'],
                     ip_dsts=['10.0.0.3'])
 ra.plot()
+"""

@@ -11,6 +11,7 @@ def get_ip():
     ip_address = str(out).split('\\n')[0][2:]
     return ip_address
 
+
 class FTPClient:
 
     def __init__(self):

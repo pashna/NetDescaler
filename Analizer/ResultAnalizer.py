@@ -22,7 +22,6 @@ class ResultAnalyzer:
         self.__ip_srcs = ip_srcs
         self.__ip_dsts = ip_dsts
 
-
     def __read_df(self, path):
 
         df = pd.read_csv(path, sep='\t', header=None, engine='python')

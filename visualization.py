@@ -1,7 +1,6 @@
 from bowtie.visual import Plotly
-from bowtie.control import Nouislider, Upload, Dropdown
+from bowtie.control import Nouislider, Upload, Dropdown, Slider
 from Analizer.ResultAnalizer import ResultAnalyzer
-import plotlywrapper as pw
 
 
 sine_plot = Plotly()
@@ -9,6 +8,7 @@ freq_slider = Nouislider(caption='Aggregation time, ms', minimum=50, maximum=200
 upload = Upload(multiple=False, caption='Upload csv to analyze')
 dropdown_src = Dropdown(caption='src_ips', labels=[''], values=[''])
 dropdown_dst = Dropdown(caption='dst_ips', labels=[''], values=[''])
+scale_factor_input = Nouislider(caption='Scaling factor', start=1, minimum=0, maximum=1)
 
 result_analyzer = ResultAnalyzer()
 src_ips = []
@@ -18,8 +18,14 @@ initialized = False
 def upload_listener(name, file):
     result_analyzer.read_df(file)
 
-def iniitalize_dropdown():
-    result_analyzer.get_dst_ip()
+
+def update_scale_factor(scale_factor):
+    scale_factor = float(scale_factor[0])
+    result_analyzer.scale_factor_ = scale_factor
+
+    freq = freq_slider.get()
+    slider_listener([freq])
+
 
 def dropdown_src_listener(f1):
     global src_ips
@@ -30,8 +36,6 @@ def dropdown_src_listener(f1):
         src_ips = []
     else:
         src_ips = [f1['value']]
-
-    print("DROPDOWN SRC UPDATE = ", f1)
 
     dst_ips = result_analyzer.get_src_ip(src_ips)
     dropdown_dst.do_options(labels=[""] + dst_ips, values=[""] + dst_ips)
@@ -50,8 +54,6 @@ def dropdown_dst_listener(f1):
     else:
         dst_ips = [f1['value']]
 
-    print("DROPDOWN DST UPDATE = ", f1)
-
     freq = freq_slider.get()
     slider_listener([freq])
 
@@ -68,10 +70,7 @@ def slider_listener(freq):
         dropdown_dst.do_options(labels=[""] + dst_ips, values=[""] + dst_ips)
         initialized = True
 
-    print('src ip = ' , src_ips, dst_ips, freq)
-
     freq = int(float(freq[0]))
-
     freq = str(freq) + 'ms'
 
     x, y = result_analyzer.calc_xy(freq, ip_srcs=src_ips, ip_dsts=dst_ips)
@@ -84,14 +83,12 @@ def slider_listener(freq):
             'y': y
         }],
         'layout': {
-            'title': 'TITLE',
+            'title': 'Traffic',
             'yaxis':{'title': 'Mbit'},
             'xaxis': {'title': 'seconds'},
         }
     })
 
-
-#fig = go.Figure(data=data, layout=layout)
 
 from bowtie import command
 @command
@@ -103,6 +100,9 @@ def main():
 
     app.add_sidebar(upload)
     app.subscribe(upload_listener, upload.on_upload)
+
+    app.add_sidebar(scale_factor_input)
+    app.subscribe(update_scale_factor, scale_factor_input.on_change)
 
     app.add_sidebar(freq_slider)
     app.subscribe(slider_listener, freq_slider.on_change)

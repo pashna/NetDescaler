@@ -59,10 +59,6 @@ def run_ftp_experiment(path, scale_factor):
 
         tc.decode_capture(remove_old=False)
 
-        ra = ResultAnalyzer(pathes=[tc.get_filename() + '.csv'],
-                            ip_dsts=['10.0.0.2'],
-                            freq='500ms')
-        ra.plot()
         os.system("rm tmp_files/*")
     except Exception as ex:
         print(ex)
@@ -73,6 +69,6 @@ def run_ftp_experiment(path, scale_factor):
 from random import randint
 if __name__ == '__main__':
     setLogLevel('info')
-    scale_factor = 0.1
-    path = "/home/pkochetk/images/data/MSU/capture/csv/" + str(scale_factor).replace(".", "_") + "/" + str(randint(0, 5000))
+    scale_factor = config["scale_factor"]
+    path = config["save_path"] + str(randint(0, 5000))
     run_ftp_experiment(path, scale_factor)

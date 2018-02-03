@@ -1,14 +1,14 @@
-import os
 import pandas as pd
 import numpy as np
 from pandas import Grouper
 import re
-import matplotlib.pyplot as plt
-from matplotlib import interactive
-interactive(True)
 
 
 class ResultAnalyzer:
+
+    def __init__(self):
+        self.scale_factor_ = 1.
+
     def read_df(self, path):
 
         df = pd.read_csv(path, sep='\t', header=None, engine='python')
@@ -28,11 +28,11 @@ class ResultAnalyzer:
 
         self.df = df
 
-    def __aggregate(self, df, freq, scale=1.):
+    def __aggregate(self, df, freq):
         freq_int = int(re.search(r'\d+', freq).group())
         freq_dim = freq.replace(str(freq_int), "")
 
-        new_freq = str(int(freq_int / scale)) + freq_dim
+        new_freq = str(int(freq_int / self.scale_factor_)) + freq_dim
         df = df.groupby(Grouper(key='date', freq=new_freq))['size'].sum()
         df = df.fillna(0)
         df = pd.DataFrame(df)
@@ -50,10 +50,10 @@ class ResultAnalyzer:
 
         return df
 
-    def calc_xy(self, freq='500ms', ip_srcs=[], ip_dsts=[], scale=1.):
+    def calc_xy(self, freq='500ms', ip_srcs=[], ip_dsts=[]):
 
         df_exp = self.filter_ip(self.df, ip_srcs, ip_dsts)
-        df_exp = self.__aggregate(df_exp, freq, scale)
+        df_exp = self.__aggregate(df_exp, freq)
 
         x = df_exp['diff'].values.astype(float) / 1000.
         y = df_exp['size'].values.astype(float) / (1024*1024)

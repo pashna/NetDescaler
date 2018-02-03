@@ -1,7 +1,7 @@
 
 CONFIG = \
-    {
-          "interfaces_to_capture": ["h1", "h2"],
+    {     "scale_factor": 0.5,
+          "save_path": "/home/pkochetk/images/data/MSU/capture/csv/0_5/",
           "hosts": ["h1", "h2", "h3", "h4"],
           "switches": ["s1", "s2"],
           "links": [

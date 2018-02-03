@@ -9,20 +9,7 @@ interactive(True)
 
 
 class ResultAnalyzer:
-
-    def __init__(self, pathes, freq, ip_srcs=[], ip_dsts=[]):
-        """
-        :param pathes:[str, ]
-        :param freq: str, in pandas format, for ex '500ms'
-        """
-
-        self.__pathes = pathes
-        self.__freq = freq
-        self.__freq_int = int(re.search(r'\d+', freq).group())
-        self.__ip_srcs = ip_srcs
-        self.__ip_dsts = ip_dsts
-
-    def __read_df(self, path):
+    def read_df(self, path):
 
         df = pd.read_csv(path, sep='\t', header=None, engine='python')
         df.rename(columns={
@@ -38,47 +25,52 @@ class ResultAnalyzer:
         df.index = df['date']
 
         del df[0]
-        #del df[5]
 
-        return df
+        self.df = df
 
-    def __aggregate(self, df):
-        df = df.groupby(Grouper(key='date', freq=self.__freq))['size'].sum()
+    def __aggregate(self, df, freq, scale=1.):
+        freq_int = int(re.search(r'\d+', freq).group())
+        freq_dim = freq.replace(str(freq_int), "")
+
+        new_freq = str(int(freq_int / scale)) + freq_dim
+        df = df.groupby(Grouper(key='date', freq=new_freq))['size'].sum()
         df = df.fillna(0)
         df = pd.DataFrame(df)
 
         df['diff'] = np.arange(0, len(df))
-        df['diff'] *= self.__freq_int
+        df['diff'] *= freq_int
 
         return df
 
-    def filter_ip(self, df):
-        if len(self.__ip_srcs):
-            df = df[df.ip_src.isin(self.__ip_srcs)]
-        if len(self.__ip_dsts):
-            df = df[df.ip_dst.isin(self.__ip_dsts)]
+    def filter_ip(self, df, ip_srcs=[], ip_dsts=[]):
+        if len(ip_srcs):
+            df = df[df.ip_src.isin(ip_srcs)]
+        if len(ip_dsts):
+            df = df[df.ip_dst.isin(ip_dsts)]
 
         return df
 
-    def plot(self):
-        df = None
-        for path in self.__pathes:
-            df_exp = self.__read_df(path)
-            df_exp = self.filter_ip(df_exp)
-            df_exp = self.__aggregate(df_exp)
-            if df is None:
-                df = df_exp
-            else:
-                df['size'] += df_exp['size']
+    def calc_xy(self, freq='500ms', ip_srcs=[], ip_dsts=[], scale=1.):
 
-        df['size'] /= len(self.__pathes)
-        df['size'].plot()
-        input('press return to continue')
+        df_exp = self.filter_ip(self.df, ip_srcs, ip_dsts)
+        df_exp = self.__aggregate(df_exp, freq, scale)
 
-"""
-ra = ResultAnalyzer(['/home/pkochetk/images/data/MSU/capture/exp_1/0_1/date__12_16_18_13mb_50.csv'],
-                    '500ms',
-                    ip_srcs=['10.0.0.1', '10.0.0.2'],
-                    ip_dsts=['10.0.0.3'])
-ra.plot()
-"""
+        x = df_exp['diff'].values.astype(float) / 1000.
+        y = df_exp['size'].values.astype(float) / (1024*1024)
+        return x, y
+
+    def get_src_ip(self, ip_dsts=[]):
+
+        if len(ip_dsts) > 0:
+            dst_df_ip = self.df[self.df['ip_dst'].isin(ip_dsts)]
+            return sorted(list(dst_df_ip['ip_src'].unique()))
+        else:
+            return sorted(list(self.df['ip_src'].unique()))
+
+    def get_dst_ip(self, ip_srcs=[]):
+
+        if len(ip_srcs) > 0:
+            src_df_ip = self.df[self.df['ip_src'].isin(ip_srcs)]
+            return list(src_df_ip['ip_dst'].unique())
+        else:
+            return list(self.df['ip_dst'].unique())

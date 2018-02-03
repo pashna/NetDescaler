@@ -9,39 +9,42 @@ CONFIG = \
               "node1": "h1",
               "node2": "s1",
               "bw": 10,
-              "delay": "20ms",
+              "delay": "5ms",
           },
           {
               "node1": "h2",
               "node2": "s1",
               "bw": 10,
-              "delay": "20ms",
+              "delay": "5ms",
           },
           {
               "node1": "h3",
               "node2": "s2",
               "bw": 10,
-              "delay": "20ms",
+              "delay": "5ms",
           },
           {
               "node1": "h4",
               "node2": "s2",
-              "bw": 10,
-              "delay": "20ms",
+              "bw": 50,
+              "delay": "5ms",
           },
           {
               "node1": "s1",
               "node2": "s2",
-              "bw": 10,
-              "delay": "20ms",
+              "bw": 50,
+              "delay": "5ms",
           },
           ],
           "commands": {
               "h1": [{"cmd": "python NetworkApps/ftp/ftp_server.py",
                       "sleep_time": 0}],
-              "h2": [{"cmd": "python NetworkApps/ftp/ftp_client.py 25M h1 download",
-                      "sleep_time": 3}],
-              "h3": [{"cmd": "python NetworkApps/ftp/ftp_client.py 40M h1 download",
-                      "sleep_time": 5}]
+              "h2": [{"cmd": "python NetworkApps/ftp/ftp_client.py 50M h1 download",
+                      "sleep_time": 0}],
+              "h3": [{"cmd": "python NetworkApps/ftp/ftp_client.py 50M h1 download",
+                      "sleep_time": 0}],
+              "h4": [{"cmd": "python NetworkApps/ftp/ftp_client.py 50M h1 download",
+                      "sleep_time": 0}],
+
           }
 }

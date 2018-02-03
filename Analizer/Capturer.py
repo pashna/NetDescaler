@@ -25,10 +25,9 @@ class TrafficCapturer:
     def decode_capture(self, remove_old=False):
         os.system("tshark -r {}.pcap -T fields -e frame.number -e frame.time "
                   " -e ip.src -e ip.dst -e frame.len > {}.csv".format(self.__filename,
-                                                                                 self.__filename))
+                                                                      self.__filename))
         if remove_old:
             os.system("rm {}.pcap".format(self.__filename))
 
     def get_filename(self):
         return self.__filename
-

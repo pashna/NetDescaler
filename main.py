@@ -8,17 +8,13 @@ from mininet.link import TCLink
 from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 from mininet.node import OVSSwitch, Controller, RemoteController
-from time import sleep
-from signal import SIGINT
-from datetime import datetime
+
 import os
 from Analizer.Capturer import TrafficCapturer
 from Analizer.ResultAnalizer import ResultAnalyzer
-from time import sleep
-from datetime import datetime, timedelta
 from NetworkApps.FlowScheduler import FlowScheduler
 from DownScalers.DBProduct import BDProduct
-from copy import copy
+from time import sleep
 
 class Topology(Topo):
     "Single switch connected to n hosts."
@@ -37,9 +33,9 @@ class Topology(Topo):
         for l in config['links']:
             self.addLink(l["node1"], l["node2"], bw=l['bw'], delay=l['delay'])
 
-def run_ftp_experiment():
+def run_ftp_experiment(path, scale_factor):
 
-    bdproduct = BDProduct(0.5)
+    bdproduct = BDProduct(scale_factor)
     config_updated = bdproduct.update_config(config)
 
     topo = Topology(config_updated)
@@ -49,7 +45,7 @@ def run_ftp_experiment():
 
     try:
 
-        tc = TrafficCapturer(eths=['s1-eth1'])
+        tc = TrafficCapturer(filename=path, eths=['s1-eth1'])
         tc.start_capturing()
 
         net.pingAll()
@@ -58,6 +54,7 @@ def run_ftp_experiment():
         results = flow_scheduler.run_commands(net, config_updated["commands"])
         for h, r in results.iteritems():
             print(h, "".join(r))
+            print("")
             print("----")
 
         tc.decode_capture(remove_old=False)
@@ -73,6 +70,9 @@ def run_ftp_experiment():
         net.stop()
 
 
+from random import randint
 if __name__ == '__main__':
     setLogLevel('info')
-    run_ftp_experiment()
+    scale_factor = 0.1
+    path = "/home/pkochetk/images/data/MSU/capture/csv/" + str(scale_factor).replace(".", "_") + "/" + str(randint(0, 5000))
+    run_ftp_experiment(path, scale_factor)

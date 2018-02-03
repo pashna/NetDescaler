@@ -3,12 +3,15 @@
 The tool is an implementation of the idea proposed in the article 
 > Kim, Hwangnam, Hyuk Lim, and Jennifer C. Hou. Network Invariant-Based Fast Simulation for Large Scale TCP/IP Networks. 2004.
 
-but with using fast prototyping (based on Mininet) rather than simulation, which helps to improve accurancy of the method.
+but using fast prototyping (based on Mininet) rather than simulation, which helps to improve accurancy of the method.
 
 ## How to use the app
-*0. Install all the dependency*
+### Installation
+1. Install [Mininet](http://mininet.org/) or use provided vm-image. 
+2. For result visualization we use [bowtie](https://github.com/jwkvam/bowtie), so one needs to install it prior running the visualization module.
 
-1. Define network configuration in config.py. 
+### Usage
+1. Define network configuration in *config.py*. 
 * *scale_factor* is a number from 0 to 1 
 * *save_path* is a folder where tcpdumps transformed into csv-files will be stored
 * *hosts* list of hosts
@@ -22,9 +25,9 @@ sudo python main.py
 ```
 and wait until the emulation finishes.
 
-3. For result visualization we use [bowtie](https://github.com/jwkvam/bowtie), so one needs to install it prior running the visualization module. After the installation
+3. Visualize the result
 ```
 python visualization.py build
 python visualization.py serve
 ```
-and the visualization will be avaliable via the link https://localhost:9991
+and the graphs will be avaliable via the link https://localhost:9991

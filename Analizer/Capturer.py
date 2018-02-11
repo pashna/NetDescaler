@@ -1,7 +1,6 @@
 import os
 from time import gmtime, strftime, sleep
 
-
 class TrafficCapturer:
 
     def __init__(self, filename=None, eths=None):
@@ -22,11 +21,11 @@ class TrafficCapturer:
                                                        self.__eths))
         sleep(2)
 
-    def decode_capture(self, remove_old=False):
+    def decode_capture(self, remove_pcap=False):
         os.system("tshark -r {}.pcap -T fields -e frame.number -e frame.time "
                   " -e ip.src -e ip.dst -e frame.len > {}.csv".format(self.__filename,
                                                                       self.__filename))
-        if remove_old:
+        if remove_pcap:
             os.system("rm {}.pcap".format(self.__filename))
 
     def get_filename(self):

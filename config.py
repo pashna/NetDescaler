@@ -1,6 +1,8 @@
 
 CONFIG = \
     {     "scale_factor": 0.5,
+          "plot_graph": True,
+
           "save_path": "/home/pkochetk/images/data/MSU/capture/csv/0_5/",
           "hosts": ["h1", "h2", "h3", "h4"],
           "switches": ["s1", "s2"],

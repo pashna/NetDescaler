@@ -8,6 +8,8 @@ from mininet.link import TCLink
 from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 from mininet.node import OVSSwitch, Controller, RemoteController
+import sys
+from Analizer.GraphVisualizer import GraphVisualizer
 
 import os
 from Analizer.Capturer import TrafficCapturer
@@ -15,6 +17,7 @@ from Analizer.ResultAnalizer import ResultAnalyzer
 from NetworkApps.FlowScheduler import FlowScheduler
 from DownScalers.DBProduct import BDProduct
 from time import sleep
+from time import gmtime, strftime
 
 class Topology(Topo):
     "Single switch connected to n hosts."
@@ -34,6 +37,8 @@ class Topology(Topo):
             self.addLink(l["node1"], l["node2"], bw=l['bw'], delay=l['delay'])
 
 def run_ftp_experiment(path, scale_factor):
+    if "plot_graph" in config and config["plot_graph"]:
+        GraphVisualizer().draw_graph(config["links"], config["hosts"])
 
     bdproduct = BDProduct(scale_factor)
     config_updated = bdproduct.update_config(config)
@@ -57,7 +62,7 @@ def run_ftp_experiment(path, scale_factor):
             print("")
             print("----")
 
-        tc.decode_capture(remove_old=False)
+        tc.decode_capture(remove_pcap=True)
 
         os.system("rm tmp_files/*")
     except Exception as ex:
@@ -65,10 +70,15 @@ def run_ftp_experiment(path, scale_factor):
     finally:
         net.stop()
 
-
-from random import randint
 if __name__ == '__main__':
     setLogLevel('info')
-    scale_factor = config["scale_factor"]
-    path = config["save_path"] + str(randint(0, 5000))
+
+    if len(sys.argv) > 1:
+        scale_factor = float(sys.argv[1])
+        path = sys.argv[2] + strftime("%Y_%m_%d__%H_%M_%S", gmtime())
+    else:
+        scale_factor = config["scale_factor"]
+        path = config["save_path"] + strftime("%Y_%m_%d__%H_%M_%S", gmtime())
+    print(config)
+    print("Experiment is starting. {}, {}".format(scale_factor, path))
     run_ftp_experiment(path, scale_factor)

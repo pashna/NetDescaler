@@ -1,7 +1,7 @@
 # Network Downscaler
 
 The tool is an implementation of the idea proposed in the article 
-> Kim, Hwangnam, Hyuk Lim, and Jennifer C. Hou. Network Invariant-Based Fast Simulation for Large Scale TCP/IP Networks. 2004.
+> Kim, Hwangnam, Hyuk Lim, and Jennifer C. Hou. Network Invariant-Based Fast Simulation for Large Scale TCP/IP Networks.
 
 but using fast prototyping (based on Mininet) rather than simulation, which helps to improve accurancy of the method.
 

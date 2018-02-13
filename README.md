@@ -14,6 +14,7 @@ but using fast prototyping (based on Mininet) rather than simulation, which help
 1. Define network configuration in *config.py*. 
 * *scale_factor* is a number from 0 to 1 
 * *save_path* is a folder where tcpdumps transformed into csv-files will be stored
+* *plot_graph* set as True if before running the experiment you want to have a visialization of your topology
 * *hosts* list of hosts
 * *switches* list of switches
 * *links* list of links with theirs parameters (*Bandwidth, delay*)

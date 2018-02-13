@@ -2,7 +2,7 @@
 CONFIG = {
           "scale_factor": 0.5,
           "save_path": "/home/pkochetk/images/data/MSU/capture/csv/0_5/",
-          "plot_graph": True,
+          "plot_graph": False,
           "hosts": ["h1", "h1_1", "h1_2",
                     "h2", "h2_1", "h2_2",
                     "h3", "h3_1", "h3_2", ],
@@ -23,7 +23,16 @@ CONFIG = {
               "bw": 10, "delay": "10ms",
           },
           {
+              "node1": "h2_2", "node2": "s2",
+              "bw": 10, "delay": "10ms",
+          },
+
+          {
               "node1": "h3_1", "node2": "s3",
+              "bw": 10, "delay": "10ms",
+          },
+          {
+              "node1": "h3_2", "node2": "s3",
               "bw": 10, "delay": "10ms",
           },
 

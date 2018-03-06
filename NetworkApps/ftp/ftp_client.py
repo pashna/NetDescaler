@@ -8,7 +8,7 @@ import subprocess
 def get_ip():
     proc = subprocess.Popen(["ifconfig | grep -Po '(?<=inet addr:)[0-9\.]+'"], stdout=subprocess.PIPE, shell=True)
     out, _ = proc.communicate()
-    ip_address = str(out).split('\\n')[0][2:]
+    ip_address = str(out).split('\\n')[0]
     return ip_address
 
 
@@ -18,7 +18,7 @@ class FTPClient:
         self.__ftp = FTP('')
 
     def connect(self, server_ip):
-        self.__ftp.connect(server_ip, 1026)
+        self.__ftp.connect(server_ip, 1036)
         self.__ftp.login()
         self.__ftp.cwd('/')  # replace with your directory
         self.__ftp.retrlines('LIST')
@@ -61,9 +61,8 @@ if __name__ == '__main__':
     print(filename)
     server = sys.argv[2]
     cmd = sys.argv[3]
-    sleep_time = 0
-    if len(sys.argv) == 5:
-        sleep_time = float(sys.argv[4])
+    #port = int(sys.argv[4])
+    sleep_time = float(sys.argv[4])
 
     sleep(sleep_time)
     main(filename, server, cmd)

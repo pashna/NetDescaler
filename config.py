@@ -2,51 +2,46 @@
 CONFIG = \
     {     "scale_factor": 0.5,
           "plot_graph": True,
-
-          "save_path": "/home/pkochetk/images/data/MSU/capture/csv/0_5/",
+          'interface_to_capture': ['s1-eth1'],
+          "save_path": "/home/pkochetk/msu/diploma/repo/csv/",
           "hosts": ["h1", "h2", "h3", "h4"],
-          "switches": ["s1", "s2"],
+          "switches": ["s1"],
+
           "links": [
           {
               "node1": "h1",
               "node2": "s1",
-              "bw": 10,
-              "delay": "5ms",
+              "bw": 20,
+              "delay": "10ms",
           },
           {
               "node1": "h2",
               "node2": "s1",
-              "bw": 10,
-              "delay": "5ms",
+              "bw": 20,
+              "delay": "10ms",
           },
           {
               "node1": "h3",
-              "node2": "s2",
-              "bw": 10,
-              "delay": "5ms",
+              "node2": "s1",
+              "bw": 20,
+              "delay": "10ms",
           },
           {
               "node1": "h4",
-              "node2": "s2",
-              "bw": 50,
-              "delay": "5ms",
-          },
-          {
-              "node1": "s1",
-              "node2": "s2",
-              "bw": 50,
-              "delay": "5ms",
+              "node2": "s1",
+              "bw": 20,
+              "delay": "10ms",
           },
           ],
           "commands": {
               "h1": [{"cmd": "python NetworkApps/ftp/ftp_server.py",
                       "sleep_time": 0}],
               "h2": [{"cmd": "python NetworkApps/ftp/ftp_client.py 50M h1 download",
-                      "sleep_time": 0}],
+                      "sleep_time": 1}],
               "h3": [{"cmd": "python NetworkApps/ftp/ftp_client.py 50M h1 download",
-                      "sleep_time": 0}],
+                      "sleep_time": 2}],
               "h4": [{"cmd": "python NetworkApps/ftp/ftp_client.py 50M h1 download",
-                      "sleep_time": 0}],
+                      "sleep_time": 2}],
 
           }
 }

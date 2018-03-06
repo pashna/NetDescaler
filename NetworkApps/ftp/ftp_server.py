@@ -3,6 +3,7 @@ import os
 from pyftpdlib.authorizers import DummyAuthorizer
 from pyftpdlib.handlers import FTPHandler
 from pyftpdlib.servers import FTPServer as FTP
+import sys
 import subprocess
 
 
@@ -29,7 +30,7 @@ class FTPServer:
     def run(self):
         handler = FTPHandler
         handler.authorizer = self.__authorizer
-        self.__server = FTP((get_ip(), 1026), handler)
+        self.__server = FTP((get_ip(), 1036), handler)
         self.__server.serve_forever()
 
 

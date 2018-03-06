@@ -1,7 +1,7 @@
 
 CONFIG = {
-          "scale_factor": 0.5,
-          "save_path": "/home/pkochetk/images/data/MSU/capture/csv/0_5/",
+          "scale_factor": 1.0,
+          "save_path": "/home/pkochetk/images/data/MSU/capture/csv/ftp_issue/",
           "plot_graph": False,
           "hosts": ["h1", "h1_1", "h1_2",
                     "h2", "h2_1", "h2_2",
@@ -72,30 +72,31 @@ CONFIG = {
               "bw": 10, "delay": "10ms",
           }
           ],
+          'interface_to_capture': ['s3-eth5'],
           "commands": {
               "h1": [{"cmd": "python NetworkApps/ftp/ftp_server.py",
-                      "sleep_time": 0}],
+                      "sleep_time": 1}],
               "h2": [{"cmd": "python NetworkApps/ftp/ftp_server.py",
-                                      "sleep_time": 0}],
+                                      "sleep_time": 1.5}],
               "h3": [{"cmd": "python NetworkApps/ftp/ftp_server.py",
-                                      "sleep_time": 0}],
+                                      "sleep_time": 2}],
 
 
-              "h1_1": [{"cmd": "python NetworkApps/ftp/ftp_client.py 10M h1 download",
-                      "sleep_time": 0}],
-              "h1_2": [{"cmd": "python NetworkApps/ftp/ftp_client.py 10M h1 download",
-                      "sleep_time": 0}],
+              "h1_1": [{"cmd": "python NetworkApps/ftp/ftp_client.py 5M h1 download",
+                      "sleep_time": 5}],
+              "h1_2": [{"cmd": "python NetworkApps/ftp/ftp_client.py 5M h1 download",
+                      "sleep_time": 5}],
 
 
-              "h2_1": [{"cmd": "python NetworkApps/ftp/ftp_client.py 10M h2 download",
-                      "sleep_time": 0}],
-              "h2_2": [{"cmd": "python NetworkApps/ftp/ftp_client.py 10M h2 download",
-                      "sleep_time": 0}],
+              "h2_1": [{"cmd": "python NetworkApps/ftp/ftp_client.py 5M h2 download",
+                      "sleep_time": 5}],
+              "h2_2": [{"cmd": "python NetworkApps/ftp/ftp_client.py 5M h2 download",
+                      "sleep_time": 5}],
 
 
-              "h3_1": [{"cmd": "python NetworkApps/ftp/ftp_client.py 10M h3 download",
-                      "sleep_time": 0}],
-              "h3_2": [{"cmd": "python NetworkApps/ftp/ftp_client.py 10M h3 download",
-                      "sleep_time": 0}],
+              "h3_1": [{"cmd": "python NetworkApps/ftp/ftp_client.py 5M h3 download",
+                      "sleep_time": 5}],
+              "h3_2": [{"cmd": "python NetworkApps/ftp/ftp_client.py 5M h3 download",
+                      "sleep_time": 5}],
           }
 }

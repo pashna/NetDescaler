@@ -16,7 +16,7 @@ class FlowScheduler:
 
     def run_commands(self, net, config):
         ip_addresses = self.get_host_ip(net)
-
+        print(ip_addresses)
         for h in net.hosts:
             if h.name in config:
                 cmd_configs = config[h.name]
@@ -33,7 +33,8 @@ class FlowScheduler:
                     if 'server' in cmd:
                         cmd += " &"
                     h.sendCmd(cmd)
-
+        from time import sleep
+        sleep(10)
         print("All flows are started")
         results = {}
         for h in net.hosts:

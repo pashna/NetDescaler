@@ -36,6 +36,7 @@ class Topology(Topo):
         for l in config['links']:
             self.addLink(l["node1"], l["node2"], bw=l['bw'], delay=l['delay'])
 
+
 def run_ftp_experiment(path, scale_factor):
     if "plot_graph" in config and config["plot_graph"]:
         GraphVisualizer().draw_graph(config["links"], config["hosts"])
@@ -50,13 +51,14 @@ def run_ftp_experiment(path, scale_factor):
 
     try:
 
-        tc = TrafficCapturer(filename=path, eths=['s1-eth1'])
+        tc = TrafficCapturer(filename=path, eths=config_updated['interface_to_capture'])
         tc.start_capturing()
 
         net.pingAll()
 
         flow_scheduler = FlowScheduler()
         results = flow_scheduler.run_commands(net, config_updated["commands"])
+
         for h, r in results.iteritems():
             print(h, "".join(r))
             print("")
@@ -69,6 +71,7 @@ def run_ftp_experiment(path, scale_factor):
         print(ex)
     finally:
         net.stop()
+
 
 if __name__ == '__main__':
     setLogLevel('info')

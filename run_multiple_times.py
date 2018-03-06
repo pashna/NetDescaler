@@ -1,13 +1,14 @@
 import os
 
-base_path = "/home/pkochetk/images/data/MSU/capture/full_exp/"
+base_path = "/home/pkochetk/images/data/MSU/capture/full_exp_3/"
 os.system('mn --topo=tree,depth=4 --test pingall')
-for scale in [1.0, 0.5, 0.2, 0.1]:
+#for scale in [1.0, 0.5, 0.2, 0.1]:
+for scale in [0.05]:
 
     scale_path = str(scale).replace(".", "_")
     path = base_path + scale_path + "/"
 
-    for _ in range(10):
+    for _ in range(5):
 
         os.system('echo "================" >> {}log'.format(path))
         os.system('echo "================" >> {}log'.format(path))

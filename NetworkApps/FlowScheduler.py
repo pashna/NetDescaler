@@ -40,6 +40,7 @@ class FlowScheduler:
         sleep(10)
         print("All flows are started")
         results = {}
+
         for h in net.hosts:
             results[h.name] = h.waitOutput()
 

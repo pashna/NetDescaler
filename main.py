@@ -6,6 +6,7 @@ from mininet.net import Mininet
 from mininet.node import CPULimitedHost
 from mininet.link import TCLink
 from mininet.log import setLogLevel
+from utils.utils import *
 import sys
 from Analyzer.GraphVisualizer import GraphVisualizer
 from Analyzer.Capturer import TrafficCapturer
@@ -60,8 +61,10 @@ if __name__ == '__main__':
     #    scale_factor = float(sys.argv[1])
     #    path = sys.argv[2] + strftime("%Y_%m_%d__%H_%M_%S", gmtime())
     #else:
-    #scale_factor = config["scale_factor"]
-    #path = config["save_path"] + strftime("last_experiment", gmtime())
+    config = read_json("config.json")
+    scale_factor = config["scale_factor"]
+    path = config["save_path"] + strftime("last_experiment", gmtime())
+    run_experiment(config, scale_factor)
     #print(config)
     #print("Experiment is starting. {}, {}".format(scale_factor, path))
     #run_experiment(path, scale_factor)

@@ -18,7 +18,7 @@ class TrafficCapturer:
     def start_capturing(self):
         print("Saving Capture To {}".format(self.__filename))
         for eth in self.__eths:
-            os.system("tcpdump -w {}_{}.pcap -i {} &".format(self.__filename, eth, eth)
+            os.system("tcpdump -w {}_{}.pcap -i {} &".format(self.__filename, eth, eth))
         sleep(2)
 
     def decode_capture(self, remove_pcap=False):

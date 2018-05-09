@@ -1,8 +1,6 @@
-
-CONFIG = \
-    {     "scale_factor": 1.,
-          "plot_graph": True,
-          'interface_to_capture': ['s1-eth1'],
+{         "scale_factor": 1.0,
+          "plot_graph": 1,
+          "interface_to_capture": ["s1-eth2"],
           "save_path": "/home/pkochetk/msu/diploma/repo/csv/",
           "hosts": ["h1", "h2", "h3", "h4"],
           "switches": ["s1"],
@@ -12,26 +10,26 @@ CONFIG = \
               "node1": "h1",
               "node2": "s1",
               "bw": 20,
-              "delay": "1ms",
+              "delay": "1ms"
           },
           {
               "node1": "h2",
               "node2": "s1",
               "bw": 20,
-              "delay": "1ms",
+              "delay": "1ms"
           },
           {
               "node1": "h3",
               "node2": "s1",
               "bw": 20,
-              "delay": "1ms",
+              "delay": "1ms"
           },
           {
               "node1": "h4",
               "node2": "s1",
               "bw": 20,
-              "delay": "1ms",
-          },
+              "delay": "1ms"
+          }
           ],
           "commands": {
               "h1": [{"cmd": "python NetworkApps/ftp/ftp_server.py",
@@ -48,7 +46,7 @@ CONFIG = \
               "h3": [{"cmd": "python NetworkApps/ftp/ftp_client.py 50M h1 download",
                       "sleep_time": 1}],
               "h4": [{"cmd": "python NetworkApps/ftp/ftp_client.py 50M h1 download",
-                      "sleep_time": 1}],
+                      "sleep_time": 1}]
 
           }
 }

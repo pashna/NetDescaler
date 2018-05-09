@@ -28,7 +28,7 @@ and wait until the emulation finishes.
 
 3. Visualize the result
 ```
-python visualization.py build
-python visualization.py serve
+python WebInterface.py build
+python WebInterface.py serve
 ```
 and the graphs will be avaliable via the link https://localhost:9991

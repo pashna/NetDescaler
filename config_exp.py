@@ -2,7 +2,7 @@
 CONFIG = {
           "scale_factor": 1.0,
           "save_path": "/home/pkochetk/images/data/MSU/capture/csv/ftp_issue/",
-          "plot_graph": False,
+          "plot_graph": True,
           "hosts": ["h1", "h1_1", "h1_2",
                     "h2", "h2_1", "h2_2",
                     "h3", "h3_1", "h3_2", ],

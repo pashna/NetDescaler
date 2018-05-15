@@ -44,7 +44,7 @@ def run_experiment(config, scale_factor):
             print("")
             print("----")
 
-        tc.decode_capture(remove_pcap=True)
+        tc.decode_capture(scale_factor, remove_pcap=False)
 
         os.system("rm tmp_files/*")
     except Exception as ex:
@@ -55,16 +55,8 @@ def run_experiment(config, scale_factor):
 
 if __name__ == '__main__':
     setLogLevel('info')
-    import os
 
-    #if len(sys.argv) > 1:
-    #    scale_factor = float(sys.argv[1])
-    #    path = sys.argv[2] + strftime("%Y_%m_%d__%H_%M_%S", gmtime())
-    #else:
     config = read_json("config.json")
     scale_factor = config["scale_factor"]
     path = config["save_path"] + strftime("last_experiment", gmtime())
     run_experiment(config, scale_factor)
-    #print(config)
-    #print("Experiment is starting. {}, {}".format(scale_factor, path))
-    #run_experiment(path, scale_factor)

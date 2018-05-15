@@ -1,5 +1,6 @@
 import os
 from time import gmtime, strftime, sleep
+import pandas as pd
 
 class TrafficCapturer:
 
@@ -21,7 +22,7 @@ class TrafficCapturer:
             os.system("tcpdump -w {}_{}.pcap -i {} &".format(self.__filename, eth, eth))
         sleep(2)
 
-    def decode_capture(self, remove_pcap=False):
+    def decode_capture(self, scale_factor, remove_pcap=False):
 
         for eth in self.__eths:
             os.system("tshark -r {}_{}.pcap -T fields -e frame.number -e frame.time "
@@ -31,6 +32,10 @@ class TrafficCapturer:
                                                                              eth))
             if remove_pcap:
                 os.system("rm {}_{}.pcap".format(self.__filename, eth))
+
+            df = pd.read_csv("{}_{}.csv".format(self.__filename, eth), header=None)
+            df.columns = ['id', 'date', 'ip_src', 'ip_dst']
+            df['date'] = pd.to_datetime(df['date'])
 
     def get_filename(self):
         return self.__filename

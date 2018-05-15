@@ -1,53 +1,28 @@
-from bowtie.visual import Plotly, Markdown
-from bowtie.control import Nouislider, Upload, Dropdown, Slider, Button, Textbox
+from bowtie.visual import Plotly
+from bowtie.control import Nouislider, Upload, Dropdown, Slider
 from Analyzer.ResultAnalizer import ResultAnalyzer
-from main import run_experiment
-from utils.utils import *
 
 
 sine_plot = Plotly()
 freq_slider = Nouislider(caption='Aggregation time, ms', minimum=50, maximum=2000, start=500)
-upload = Upload(multiple=False, caption='Upload json config')
-run_button = Button(label="Run the experiment!")
+upload = Upload(multiple=False, caption='Upload csv to analyze')
 dropdown_src = Dropdown(caption='src_ips', labels=[''], values=[''])
 dropdown_dst = Dropdown(caption='dst_ips', labels=[''], values=[''])
 scale_factor_input = Nouislider(caption='Scaling factor', start=1, minimum=0, maximum=1)
-mark = Markdown(u'NNN')
-
-#text = Textbox(area=True, autosize=True, placeholder='Enter markdown')
-
 
 result_analyzer = ResultAnalyzer()
 src_ips = []
 dst_ips = []
 initialized = False
-config = None
-config_valid = False
 
 def upload_listener(name, file):
-    #result_analyzer.read_df(file)
-    global config_valid
-    global config
-
-    print("UPLOADING", name, file)
-
-    config = read_json(name)
-    print("CONFIG READ")
-    print("Config = ", config)
-
-    validation_text = validate_config(config)
-    print("valudation text", validation_text)
-    if validation_text:
-        print("CONFIG IS NOT VALID")
-        print(validation_text)
-        config_valid = False
-    else:
-        config_valid = True
+    result_analyzer.read_df(file)
 
 
 def update_scale_factor(scale_factor):
     scale_factor = float(scale_factor[0])
     result_analyzer.scale_factor_ = scale_factor
+
     freq = freq_slider.get()
     slider_listener([freq])
 
@@ -68,18 +43,6 @@ def dropdown_src_listener(f1):
     freq = freq_slider.get()
     slider_listener([freq])
 
-
-def button_listener():
-    scale_factor = float(scale_factor_input.get())
-    print("SCALE_FACTOR = ", scale_factor)
-    sine_plot.progress.do_percent(0)
-    sine_plot.progress.do_visible(True)
-    run_experiment(config, scale_factor)
-    sine_plot.progress.do_percent(100)
-    sine_plot.progress.do_visible(False)
-
-    result_analyzer.read_df()
-    print("")
 
 def dropdown_dst_listener(f1):
     global dst_ips
@@ -127,11 +90,6 @@ def slider_listener(freq):
     })
 
 
-def write(txt):
-    print(txt)
-    print(type(txt))
-    mark.do_text(txt)
-
 from bowtie import command
 @command
 def main():
@@ -146,14 +104,6 @@ def main():
     app.add_sidebar(scale_factor_input)
     app.subscribe(update_scale_factor, scale_factor_input.on_change)
 
-    app.add_sidebar(mark)
-
-    #app.add_sidebar(text)
-    #app.subscribe(write, text.on_change)
-
-    app.add_sidebar(run_button)
-    app.subscribe(button_listener, run_button.on_click)
-
     app.add_sidebar(freq_slider)
     app.subscribe(slider_listener, freq_slider.on_change)
 
@@ -162,6 +112,5 @@ def main():
 
     app.subscribe(dropdown_src_listener, dropdown_src.on_change)
     app.subscribe(dropdown_dst_listener, dropdown_dst.on_change)
-
 
     return app

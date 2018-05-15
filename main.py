@@ -44,7 +44,7 @@ def run_experiment(config, scale_factor):
             print("")
             print("----")
 
-        tc.decode_capture(scale_factor, remove_pcap=False)
+        tc.decode_capture(remove_pcap=False)
 
         os.system("rm tmp_files/*")
     except Exception as ex:

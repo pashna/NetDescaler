@@ -33,9 +33,6 @@ class TrafficCapturer:
             if remove_pcap:
                 os.system("rm {}_{}.pcap".format(self.__filename, eth))
 
-            df = pd.read_csv("{}_{}.csv".format(self.__filename, eth), header=None)
-            df.columns = ['id', 'date', 'ip_src', 'ip_dst']
-            df['date'] = pd.to_datetime(df['date'])
 
     def get_filename(self):
         return self.__filename

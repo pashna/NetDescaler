@@ -78,7 +78,7 @@ def button_listener():
     sine_plot.progress.do_percent(100)
     sine_plot.progress.do_visible(False)
 
-    result_analyzer.read_df()
+    result_analyzer.read_df(config)
     print("")
 
 def dropdown_dst_listener(f1):

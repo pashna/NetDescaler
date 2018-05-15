@@ -4,15 +4,20 @@ import pandas as pd
 
 class TrafficCapturer:
 
-    def __init__(self, filename=None, eths=None):
+    def __init__(self, filename=None, switches=None):
         """
         :param filename:
-        :param eths: list of interfaces to capture
+        :param switches: list of interfaces to capture
         """
+
         if filename is None:
             date = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
             filename = os.getcwd() + os.sep + 'csv' + os.sep + date
-
+        eths = []
+        print("ALL INF ",  os.listdir('/sys/class/net/'))
+        for s in switches:
+            eths = [interf for interf in os.listdir('/sys/class/net/') if interf.startswith(s)]
+        print("INT TO CAPTURE", eths)
         self.__eths = eths
         self.__filename = filename
 

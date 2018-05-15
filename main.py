@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from MininetHelpers.TopologyBuilder import TopologyBuilder
 from mininet.topo import Topo
-from config import CONFIG as config
+#from config import CONFIG as config
 from mininet.net import Mininet
 from mininet.node import CPULimitedHost
 from mininet.link import TCLink
@@ -12,7 +12,7 @@ from Analyzer.GraphVisualizer import GraphVisualizer
 from Analyzer.Capturer import TrafficCapturer
 from NetworkApps.FlowScheduler import FlowScheduler
 from DownScalers.DBProduct import BDProduct
-from time import gmtime, strftime
+from time import gmtime, strftime, sleep
 import os
 
 
@@ -30,8 +30,8 @@ def run_experiment(config, scale_factor):
     net.start()
 
     try:
-
-        tc = TrafficCapturer(filename=path, eths=config_updated['interface_to_capture'])
+        os.system("mkdir tmp_files")
+        tc = TrafficCapturer(filename=path, switches=config_updated['interface_to_capture'])
         tc.start_capturing()
 
         net.pingAll()
@@ -44,9 +44,11 @@ def run_experiment(config, scale_factor):
             print("")
             print("----")
 
+        print("preparing results")
+        sleep(30)
         tc.decode_capture(remove_pcap=False)
 
-        os.system("rm tmp_files/*")
+        os.system("rm -r tmp_files")
     except Exception as ex:
         print(ex)
     finally:
@@ -56,7 +58,6 @@ def run_experiment(config, scale_factor):
 if __name__ == '__main__':
     setLogLevel('info')
 
-    #config = read_json("config.json")
+    config = read_json("config.json")
     scale_factor = config["scale_factor"]
-    path = config["save_path"] + strftime("last_experiment", gmtime())
     run_experiment(config, scale_factor)

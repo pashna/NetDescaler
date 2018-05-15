@@ -34,7 +34,7 @@ class FlowScheduler:
                         cmd += " &"
                     h.startShell()
                     h.sendCmd(cmd)
-                    h.waiting = False
+                    h.waiting = True
 
         from time import sleep
         sleep(10)

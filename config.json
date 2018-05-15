@@ -1,6 +1,6 @@
 {         "scale_factor": 1.0,
           "plot_graph": 1,
-          "interface_to_capture": ["s1-eth1"],
+          "interface_to_capture": ["s1-"],
           "save_path": "/home/pkochetk/msu/diploma/repo/csv/",
           "hosts": ["h1", "h2", "h3", "h4"],
           "switches": ["s1"],
@@ -44,3 +44,7 @@
 
           }
 }
+
+
+
+

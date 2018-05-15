@@ -35,7 +35,7 @@ class FlowScheduler:
                     h.startShell()
                     h.sendCmd(cmd)
                     h.waiting = False
-                    #h.monitor()
+
         from time import sleep
         sleep(10)
         print("All flows are started")

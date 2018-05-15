@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from MininetHelpers.TopologyBuilder import TopologyBuilder
-from config import CONFIG as config
 from mininet.topo import Topo
+from config import CONFIG as config
 from mininet.net import Mininet
 from mininet.node import CPULimitedHost
 from mininet.link import TCLink
@@ -56,7 +56,7 @@ def run_experiment(config, scale_factor):
 if __name__ == '__main__':
     setLogLevel('info')
 
-    config = read_json("config.json")
+    #config = read_json("config.json")
     scale_factor = config["scale_factor"]
     path = config["save_path"] + strftime("last_experiment", gmtime())
     run_experiment(config, scale_factor)

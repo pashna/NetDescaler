@@ -22,7 +22,7 @@ class TrafficCapturer:
             os.system("tcpdump -w {}_{}.pcap -i {} &".format(self.__filename, eth, eth))
         sleep(2)
 
-    def decode_capture(self, scale_factor, remove_pcap=False):
+    def decode_capture(self, remove_pcap=False):
 
         for eth in self.__eths:
             os.system("tshark -r {}_{}.pcap -T fields -e frame.number -e frame.time "
